@@ -20,7 +20,8 @@ Contains a set of tools to measure the time to perform operations in microsecond
     - Represents a single Timestamp object
   - timestamp_util.py
     - Contains helpful utilities for reading logs and processing timestamps
-Note
+
+## Note
 - To link libcurl to the executables add these to the CMakeLists.txt file in interceptor-libevdev/src or equivalent folder
   - Add `find_package(CURL REQUIRED)` to the find_package statements
   - Add `CURL::libcurl` to the set of osi_LIBS or `target_link_libraries(package_name_here CURL::libcurl)` if not using a set of libs
