@@ -16,6 +16,20 @@ def get_time_difference(start_stamp: Timestamp, end_stamp: Timestamp):
 	return (sec_diff * 1000000) + usec_diff
 
 
+# Reorders ties for time in the list, edits the list and returns nothing
+def reorder_ties_given_priority(timestamp_list: list[Timestamp], first_code: str, second_code: str):
+	for i in range(len(timestamp_list)):
+		if i < (len(timestamp_list) - 1):
+			# There is a following element
+			if timestamp_list[i].sec == timestamp_list[i + 1].sec and timestamp_list[i].usec == timestamp_list[i + 1].usec:
+				# The they have the same time
+				if timestamp_list[i].code == second_code and timestamp_list[i + 1].code == first_code:
+					temp_timestamp = timestamp_list[i]
+					timestamp_list[i] = timestamp_list[i + 1]
+					timestamp_list[i + 1] = temp_timestamp
+	
+
+
 # Returns a list of timestamp objects from report_log.txt in the same directory
 # Raises an exception in event of an error
 def get_timestamps():
@@ -55,7 +69,17 @@ def get_timestamps():
 	
 	return sorted(timestamp_list, key=_compare_timestamps)
 	
+# returns the average of each int in a list of ints
+def get_average(duration_list: int):
+	total = 0
+	
+	for duration in duration_list:
+		total += duration
+	
+	return total / len(duration_list)
+
 # Get a datetime object used to sort the list of timestamps
 def _compare_timestamps(timestamp):
 	return datetime.fromtimestamp(timestamp.sec) + timedelta(microseconds=timestamp.usec)
+	
 
