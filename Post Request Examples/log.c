@@ -1,13 +1,10 @@
-# Use these functions to make an asynchronous POST request to the server
-
 #include <curl/curl.h>
 #include <pthread.h>
 #include <syslog.h>
 #include <time.h>
 
-
-// Helper function to run on separate thread
-void *_log_time(void *code) {
+// Helper method
+static void *_log_time(void *code) {
 	CURL *curl;
 	CURLcode res;
 
@@ -52,11 +49,9 @@ void *_log_time(void *code) {
 	return NULL;
 }
 
-// Call this function with a 3 letter code representing the type of timestamp
 void log_time(char *code) {
 	// Declare a var for the id
 	pthread_t id;
 
 	pthread_create(&id, NULL, _log_time, code);
 }
-
