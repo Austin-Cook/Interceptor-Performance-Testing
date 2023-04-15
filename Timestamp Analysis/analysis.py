@@ -100,6 +100,7 @@ def time_xor_encrypt(timestamp_list):
 		if timestamp_list[stamp_index].code == "BEG":
 			if stamp_index < len(timestamp_list) - 1:
 				if timestamp_list[stamp_index + 1].code == "END":
+					# Ignore bug where BEG prints after END
 					duration_list.append(get_time_difference(timestamp_list[stamp_index], timestamp_list[stamp_index + 1]))
 
 	# Print useful info

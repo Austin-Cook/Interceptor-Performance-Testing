@@ -7,15 +7,13 @@ from ctime_binding import get_c_time
 
 # Send a post request
 def log_time(code):
-    asyncio.run(_log_time(code))
-
-# async helper methodd
-async def _log_time(code):
     # Get the time from the c binding
     now = get_c_time()
-    sec = now[0]
-    usec = now[1]
 
+    asyncio.run(_log_time(code, now[0], now[1]))
+
+# async helper methodd
+async def _log_time(code, sec, usec):
     # Send a post request
     url = "http://localhost:4560/report"
 
