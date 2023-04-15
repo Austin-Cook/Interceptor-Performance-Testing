@@ -72,7 +72,7 @@ def time_process_input_pre_encryption(timestamp_list):
 		duration_list = duration_list[:1000]
 	
 	# Print useful info
-	print("timestamp_list length: " +str(len(timestamp_list)))
+	print("timestamp_list length: " + str(len(timestamp_list)))
 	print("duration_list length: " + str(len(duration_list)))
 	for duration in duration_list:
 		print(str(duration))
@@ -87,8 +87,31 @@ def time_process_input_pre_encryption(timestamp_list):
 	print("REC count: " + str(rec_count))
 	print("LSN count: " + str(lsn_count))
 	
-	print("Average time from keypress to gui: " + str(get_average(duration_list)))
+	print("Average time to process a keypress while not in encrypt mode: " + str(get_average(duration_list)))
 
+# BEG printed in osi_crypto_provider.c before XOR loop in function osi_stream_encrypt()
+# END printed in osi_crypto_provider.c after XOR loop in function osi_stream_encrypt()
+def time_xor_encrypt(timestamp_list):
+	# Correctly order BEC and END when they have the same timestamp
+	reorder_ties_given_priority(timestamp_list, "BEG", "END")
+
+	duration_list = []
+	for stamp_index in range(len(timestamp_list)):
+		if timestamp_list[stamp_index].code == "BEG":
+			if stamp_index < len(timestamp_list) - 1:
+				if timestamp_list[stamp_index + 1].code == "END":
+					duration_list.append(get_time_difference(timestamp_list[stamp_index], timestamp_list[stamp_index + 1]))
+
+	# Print useful info
+	print("timestamp_list length: " + str(len(timestamp_list)))
+	for timestamp in timestamp_list:
+		print(timestamp.to_string())
+	print("duration_list length: " + str(len(duration_list)))
+	for duration in duration_list:
+		print(str(duration))
+		
+	print("Average time to perform an XOR: " + str(get_average(duration_list)))
+	
 
 def main():
 	timestamp_list = None
@@ -103,7 +126,8 @@ def main():
 	#	print(timestamp.to_string())
 	
 	#time_keystroke_to_plaintext_in_gui(timestamp_list)
-	time_process_input_pre_encryption(timestamp_list)
+	#time_process_input_pre_encryption(timestamp_list)
+	time_xor_encrypt(timestamp_list)
 		
 	print("DONE")
 	

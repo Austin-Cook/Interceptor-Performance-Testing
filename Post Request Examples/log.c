@@ -1,19 +1,25 @@
 #include <curl/curl.h>
 #include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 #include <time.h>
 
+// Struct to hold args used in helper method
+struct arg_struct {
+	char *code;
+	struct timeval now;
+};
+
 // Helper method
-static void *_log_time(void *code) {
+static void *_log_time(void *args_ptr) {
 	CURL *curl;
 	CURLcode res;
 
-	// Get the code
-	char *identifier = (char *)code;
-
-	// Get the time
-	struct timeval now;
-	gettimeofday(&now, NULL);
+	// Get the args
+	struct arg_struct *args = (struct arg_struct *)args_ptr;
+	char *identifier = args->code;
+	struct timeval now = args->now;
 
 	// Create the json object
 	char *unfilledJson =
@@ -40,8 +46,12 @@ static void *_log_time(void *code) {
 		if (res != CURLE_OK) {
 			fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 		}
+	}
 
-		// Cleanup
+	// Cleanup
+	free(args->code);
+	free(args);
+	if (curl) {
 		curl_easy_cleanup(curl);
 	}
 
@@ -53,5 +63,25 @@ void log_time(char *code) {
 	// Declare a var for the id
 	pthread_t id;
 
-	pthread_create(&id, NULL, _log_time, code);
+	// Allocate memory for arg_struct
+	struct arg_struct *args = (struct arg_struct *)malloc(sizeof(struct arg_struct));
+	if (args == NULL) {
+		printf("Error - log.c: Failed to allocate memory for arg_struct struct\n");
+		exit(1);
+	}
+
+	// Allocate memory for the code
+	args->code = (char *)malloc(4 * sizeof(char));
+	if (args->code == NULL) {
+		printf("Error - log.c: Failed to allocate memory for code\n");
+		free(args->code);
+		exit(1);
+	}
+
+	// Fill the struct
+	strcpy(args->code, code);
+	gettimeofday(&args->now, NULL);
+
+	pthread_create(&id, NULL, _log_time, (void *)args);
 }
+
