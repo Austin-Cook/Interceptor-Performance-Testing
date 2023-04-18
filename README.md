@@ -6,7 +6,9 @@ Contains a set of tools to measure the time to perform operations in microsecond
   - A simple HTTP server to receive the timestamps
   - Enables integration of timestamps from multiple independent programs
 - *Post Request Examples*
-  - Code to print a timestamp in C and Python
+  - Code to submit a timestamp to the server from either C or Python
+    - For C, include the .h and .c files in your code and follow the note at the bottom of this page to make libcurl available to log.c
+    - For python, include the code from post_example.py at the top of the file where timestamps will be collected
 - *ctime-binding*
   - A binding to allow receiving time in Python using the C sys/time.h gettimeofday() function
   - Must install to your system following the instructions in the README in the folder
@@ -24,4 +26,8 @@ Contains a set of tools to measure the time to perform operations in microsecond
 ## Note
 - To link libcurl to the executables add these to the CMakeLists.txt file in interceptor-libevdev/src or equivalent folder
   - Add `find_package(CURL REQUIRED)` to the find_package statements
-  - Add `CURL::libcurl` to the set of osi_LIBS or `target_link_libraries(package_name_here CURL::libcurl)` if not using a set of libs
+  - Create and new library for the performance testing files and link libcurl to it
+    - `add_library(performance_testing OBJECT log.c)`
+    - `target_link_libraries(performance_testing PUBLIC CURL::libcurl)`
+  - Link the new library to all libraries that where the logger will be used
+    - `target_link_libraries(library_name performance_testing)`
