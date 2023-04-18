@@ -1,14 +1,14 @@
 # Interceptor Performance Testing
 Contains a set of tools to measure the time to perform operations in microseconds.
 
-## Files
+## Folders
 - *Report Server*
   - A simple HTTP server to receive the timestamps
   - Enables integration of timestamps from multiple independent programs
-- *Post Request Examples*
+- *POST Timestamp*
   - Code to submit a timestamp to the server from either C or Python
-    - For C, include the .h and .c files in your code and follow the note at the bottom of this page to make libcurl available to log.c
-    - For python, include the code from post_example.py at the top of the file where timestamps will be collected
+    - For C, put log.h and log.c in your code and follow the note at the bottom of this page to make libcurl available to log.c
+    - For python, put log.py in your code and include log_time function in the file where timestamps will be collected
 - *ctime-binding*
   - A binding to allow receiving time in Python using the C sys/time.h gettimeofday() function
   - Must install to your system following the instructions in the README in the folder
