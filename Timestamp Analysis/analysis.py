@@ -221,7 +221,12 @@ def time_keystroke_to_destination_encrypted(timestamp_list):
 					print("Average time for 201-300: " + str(get_average(duration_list[200:300])))
 					print("Average time for 301-400: " + str(get_average(duration_list[300:400])))
 					print("Average time for 401-500: " + str(get_average(duration_list[400:500])))
-					
+
+# BEG printed in osi_gui_encrypt.py function finish_encryption() ln 368
+# END printed in 
+def time_overlay_submit_plaintext_to_destination(timestamp_list):
+	
+			
 
 def main():
 	timestamp_list = None

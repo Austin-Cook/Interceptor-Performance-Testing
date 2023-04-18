@@ -24,7 +24,6 @@ async def _log_time(code, sec, usec):
             "usec": usec
         }
     }
-    print("LOGGING IN PYTHON: ", time_stamp)
 
     requests.post(url, json = time_stamp)
 
